@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <environment include="Development">
+        <link href="~/lib/twitter-bootstrap/css/bootstrap.css" rel="stylesheet" />
+        <script src="~/lib/jquery/jquery.js"></script>
+        <script src="~/lib/twitter-bootstrap/js/bootstrap.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet"
+              href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+              integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+              crossorigin="anonymous"
+              asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position"
+              asp-fallback-test-value="absolute"
+              asp-suppress-fallback-integrity="true" />
+    </environment>
+
+    <title>@ViewBag.Title</title>
+    <link href="~/css/StyleSheet.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <a class="navbar-brand"> <img src="~/images/2.jpg" alt="Alternate Text" height="30" width="30" /> </a> @*image show gareko at the bar menu ko muni*@
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#CollapseibleNavBar"> @*sano screen ko lagi esto chahiyo*@
+                <span class="navbar-toggler-icon"> </span> @*sano screen ko lagi 3 wota bar button jasari use gareko*@
+            </button>
+            <div class="collapse navbar-collapse" id="CollapseibleNavBar" >
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a asp-action="index" asp-controller="Home" class="nav-link">List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-action="Create" asp-controller="Home" class="nav-link">Create</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div>
+            @RenderBody()
+        </div>
+
+        @if (IsSectionDefined("scripts"))
+        {
+            if (IsSectionDefined("scripts"))
+            {
+
+                RenderSection("scripts", required: true);
+
+
+            }
+        }
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
