@@ -72,7 +72,8 @@ namespace WebApplication12.Controllers
                 return RedirectToAction("details", new { id = newEmployee.Id });
 
             }
-            return View();    
+            return View();   
+            //this is it
         
         }
     }
