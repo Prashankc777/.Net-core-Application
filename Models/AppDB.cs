@@ -22,6 +22,7 @@ namespace WebApplication12.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder); //For Identity
             modelBuilder.Seed();
         }
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +28,10 @@ namespace WebApplication12
             string connectionString = _config.GetConnectionString("DefaultConnection");
              services.AddDbContextPool<AppDB>(options =>
                 options.UseSqlServer(connectionString));
-            services.AddMvc();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDB>();
+
+            services.AddMvc().AddXmlDataContractSerializerFormatters();
             services.AddScoped<IEmployeeRepository, SqlEmployeeRepository>();
         }
 
@@ -47,6 +51,7 @@ namespace WebApplication12
 
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();
+            app.UseAuthentication();
            
             app.UseMvc(routes =>
             {
