@@ -47,9 +47,10 @@ namespace WebApplication12.Controllers
         }
 
 
+        [HttpPost]
         public async Task<IActionResult> Logout()
         {
-             await SignInManager.SignOutAsync();
+            await SignInManager.SignOutAsync();
             return RedirectToAction("index", "home");
 
         }
