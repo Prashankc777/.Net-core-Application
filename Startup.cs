@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using WebApplication12.Models;
 
 namespace WebApplication12
@@ -38,6 +39,10 @@ namespace WebApplication12
                 
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseStatusCodePagesWithRedirects("/Error/{0}");
+            }
 
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();
@@ -49,10 +54,10 @@ namespace WebApplication12
             });
 
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync($"hello world");
-            });
+            //app.Run(async (context) =>
+            //{
+            //    await context.Response.WriteAsync($"hello world");
+            //});
         }
     }
 }

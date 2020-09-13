@@ -19,7 +19,7 @@ namespace WebApplication12.ViewModal
         public string Email { get; set; }
         [Required]
         public dept? Department { get; set; }
-        public List<IFormFile> Photos { get; set; }
+        public IFormFile Photo { get; set; }
         
     }
 }

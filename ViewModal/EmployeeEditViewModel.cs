@@ -5,7 +5,12 @@ using System.Threading.Tasks;
 
 namespace WebApplication12.ViewModal
 {
-    public class EmployeeEditViewModel
+    public class EmployeeEditViewModel : EmployeeCreateViewModel
     {
+
+        public int id { get; set; }
+        public string ExistingPhotoPath { get; set; }
+        
+
     }
 }
