@@ -19,7 +19,7 @@
               asp-suppress-fallback-integrity="true" />
     </environment>
 
-    <title>@ViewBag.Title</title>
+    <title>@ViewBag.Title</title> 
     <link href="~/css/StyleSheet.css" rel="stylesheet" />
 </head>
 <body>
@@ -36,6 +36,14 @@
                     </li>
                     <li class="nav-item">
                         <a asp-action="Create" asp-controller="Home" class="nav-link">Create</a>
+                    </li>                 
+                 </ul>
+
+                <ul class="navbar-nav ml-au">
+                    <li class="nav-item">
+                         
+                        <a asp-action="Register" asp-controller="Account" class="nav-link">Register</a>
+
                     </li>
                 </ul>
             </div>
