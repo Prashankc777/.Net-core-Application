@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -51,13 +52,19 @@ namespace WebApplication12.Controllers
             if (ModelState.IsValid)
             {
                 string uniqueFilename = null;
-                if (employee.Photo !=null)
+            if (employee.Photos !=null && employee.Photos.Count>0)
+            {
+
+                foreach (IFormFile photo in employee.Photos)
                 {
+
+
                     string UploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
-                    uniqueFilename= Guid.NewGuid().ToString() + "_" + employee.Photo.FileName;
+                    uniqueFilename = Guid.NewGuid().ToString() + "_" + photo.FileName;
                     string filepath = Path.Combine(UploadsFolder, uniqueFilename);
-                    employee.Photo.CopyTo(new FileStream(filepath, FileMode.Create));
+                    photo.CopyTo(new FileStream(filepath, FileMode.Create));
                 }
+            }
 
                 Employee newEmployee = new Employee
                 {

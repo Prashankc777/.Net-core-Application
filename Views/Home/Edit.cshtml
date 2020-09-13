@@ -1,9 +1,9 @@
-﻿@model EmployeeCreateViewModel
+﻿@model EmployeeEditViewModel
 
 @inject IEmployeeRepository _empRepository
 
 @{
-    ViewBag.Title = "Create Employee";
+    ViewBag.Title = "Edit Employee";
 }
 
 
@@ -40,7 +40,7 @@
                 <input multiple asp-for="Photos" class="form-control custom-file-input">
                 <label class="custom-file-label">Choose File...</label>
             </div>
-          
+
         </div>
     </div>
 
@@ -53,7 +53,7 @@
     </div>
 
 
-    @section scripts{ 
+    @section scripts{
         <script>
 
             $(document).ready(function () {
