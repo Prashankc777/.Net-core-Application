@@ -41,7 +41,8 @@ namespace WebApplication12
             }
             else
             {
-                app.UseStatusCodePagesWithRedirects("/Error/{0}");
+                app.UseExceptionHandler("/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
 
             app.UseStaticFiles();

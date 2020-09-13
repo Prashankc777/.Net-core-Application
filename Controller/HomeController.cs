@@ -30,6 +30,7 @@ namespace WebApplication12.Controllers
         [Route("details/{id?}")]
         public ViewResult details(int? id)
         {
+            throw new Exception("there is exception");
             Employee employee = _employeeRepository.GetEmployee(id.Value);
             if (employee == null)
             {
