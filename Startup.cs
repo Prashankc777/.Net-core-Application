@@ -31,7 +31,7 @@ namespace WebApplication12
             string connectionString = _config.GetConnectionString("DefaultConnection");
             services.AddDbContextPool<AppDB>(options =>
                options.UseSqlServer(connectionString));
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDB>();
 
             services.AddMvc(Option =>

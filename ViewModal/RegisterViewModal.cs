@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication12.Utilites;
 
 namespace WebApplication12.ViewModal
 {
@@ -12,6 +13,7 @@ namespace WebApplication12.ViewModal
         [Required]
         [EmailAddress]   
         [Remote (action: "IsEmailInUse", controller: "Account")]
+        [ValidEmailDomain ( _allowedDomain : "kc.com", ErrorMessage ="Email domain must be kc.com")]
         public string Email { get; set; }
         [Required]
         [DataType(DataType.Password)]
@@ -21,5 +23,7 @@ namespace WebApplication12.ViewModal
         [Display(Name = "Confirm password")]
         [Compare("Password",  ErrorMessage = "Password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public string City { get; set; }
     }
 }

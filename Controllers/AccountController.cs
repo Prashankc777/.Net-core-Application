@@ -5,16 +5,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication12.Models;
 using WebApplication12.ViewModal;
 
 namespace WebApplication12.Controllers
 {
     public class AccountController : Controller
-    {
-        public readonly SignInManager<IdentityUser> SignInManager;
-        public readonly UserManager<IdentityUser> UserManager;
+    {                                  
+        public readonly SignInManager<ApplicationUser> SignInManager;
+        public readonly UserManager<ApplicationUser> UserManager;
 
-        public AccountController(UserManager<IdentityUser> _UserManager, SignInManager<IdentityUser> _SignInManager)
+        public AccountController(UserManager<ApplicationUser> _UserManager, SignInManager<ApplicationUser> _SignInManager)
         {
             this.UserManager = _UserManager;
             this.SignInManager = _SignInManager;
@@ -34,12 +35,17 @@ namespace WebApplication12.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser 
+                {
+                    UserName = model.Email, 
+                    Email = model.Email,
+                    City = model.City
+                };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("index", "home");
+                    return RedirectToAction("Index", "Home");
                 } 
                 foreach (var error in result.Errors)
                 {

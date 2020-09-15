@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication12.Models
 {
-    public class AppDB : IdentityDbContext
+    public class AppDB : IdentityDbContext<ApplicationUser>
     {
 
         public AppDB(DbContextOptions<AppDB> options ) :base(options)
