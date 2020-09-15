@@ -1,5 +1,5 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
+﻿@using Microsoft.AspNetCore.Identity ; 
+@inject SignInManager<IdentityUser> SignInManager ; 
 
 <!DOCTYPE html>
 
@@ -47,7 +47,7 @@
                     @if (SignInManager.IsSignedIn(User))
                     {
                         <li class="nav-item">
-                            <form method="post" asp-controller="Account" asp-action="logout">
+                            <form method="post" asp-controller="Account" asp-action="Logout">
                                 <button type="submit" style="width:auto"
                                         class="nav-link btn btn-link py-0">
                                     Logout @User.Identity.Name
