@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication12.ViewModal;
@@ -56,6 +57,7 @@ namespace WebApplication12.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
 
         public IActionResult Login()
         {
@@ -64,6 +66,7 @@ namespace WebApplication12.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModule model, string returnUrl)
         {
             if (ModelState.IsValid)
