@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace WebApplication12.ViewModal
     public class RegisterViewModal
     {
         [Required]
-        [EmailAddress]         
+        [EmailAddress]   
+        [Remote (action: "IsEmailInUse", controller: "Account")]
         public string Email { get; set; }
         [Required]
         [DataType(DataType.Password)]

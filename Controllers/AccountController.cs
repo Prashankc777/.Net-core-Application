@@ -22,12 +22,14 @@ namespace WebApplication12.Controllers
 
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModal model)
         {
             if (ModelState.IsValid)
@@ -91,7 +93,23 @@ namespace WebApplication12.Controllers
             return View();
         }
 
+        [AcceptVerbs("GET", "POST")]
+        [AllowAnonymous]
+        public async Task<IActionResult> IsEmailInUse(string email)
+        {
+            var user = await UserManager.FindByEmailAsync(email);
+            if (user == null )
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json($" {email} is already exist");
+            }
 
+        }
+
+        
 
     }
 }
