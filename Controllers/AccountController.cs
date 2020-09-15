@@ -64,7 +64,7 @@ namespace WebApplication12.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModule model)
+        public async Task<IActionResult> Login(LoginViewModule model, string returnUrl)
         {
             if (ModelState.IsValid)
             {
@@ -72,7 +72,12 @@ namespace WebApplication12.Controllers
                 var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
-                   
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+
+                    }
+
                     return RedirectToAction("index", "home");
                 }
                
