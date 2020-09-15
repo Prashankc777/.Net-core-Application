@@ -54,5 +54,36 @@ namespace WebApplication12.Controllers
             return RedirectToAction("index", "home");
 
         }
+
+        [HttpGet]
+
+        public IActionResult Login()
+        {
+            ModelState.Clear();
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModule model)
+        {
+            if (ModelState.IsValid)
+            {
+
+                var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                if (result.Succeeded)
+                {
+                   
+                    return RedirectToAction("index", "home");
+                }
+               
+                
+                    ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
+                
+            }
+            return View();
+        }
+
+
+
     }
 }

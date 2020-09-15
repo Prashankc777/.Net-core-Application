@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -50,6 +51,7 @@ namespace WebApplication12.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ViewResult Create()
         {
             return View();
@@ -82,6 +84,7 @@ namespace WebApplication12.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ViewResult Edit(int id)
         {
             Employee employee = _employeeRepository.GetEmployee(id);
@@ -97,7 +100,9 @@ namespace WebApplication12.Controllers
             return View(empviewmodel);
 
         }
+
         [HttpPost]
+        [Authorize]
 
         public IActionResult Edit(EmployeeEditViewModel model)
         {

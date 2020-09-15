@@ -10,7 +10,7 @@ namespace WebApplication12.ViewModal
     {
         [Required]
         [EmailAddress]
-        public int Email { get; set; }
+        public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
