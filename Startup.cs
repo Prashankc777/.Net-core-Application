@@ -36,8 +36,8 @@ namespace WebApplication12
 
             services.AddMvc(Option =>
            {
-               var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-               Option.Filters.Add(new AuthorizeFilter(policy));
+               //var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+               //Option.Filters.Add(new AuthorizeFilter(policy));
 
            }).AddXmlDataContractSerializerFormatters();
             services.AddScoped<IEmployeeRepository, SqlEmployeeRepository>();
