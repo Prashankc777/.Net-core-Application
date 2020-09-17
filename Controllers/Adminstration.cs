@@ -10,7 +10,7 @@ namespace WebApplication12.Controllers
 {
     public class Adminstration : Controller
     {
-        public RoleManager<IdentityRole> Rolemanager;
+        public readonly RoleManager<IdentityRole> Rolemanager;
 
         public Adminstration(RoleManager<IdentityRole> _Rolemanager)
         {
