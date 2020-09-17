@@ -52,5 +52,14 @@ namespace WebApplication12.Controllers
            
             return View(model);
         }
+
+
+        [HttpGet]
+        public IActionResult LIstRole()
+        {
+            var roles = Rolemanager.Roles;
+            return View(roles);
+
+        }
     }
 }
