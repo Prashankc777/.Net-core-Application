@@ -10,5 +10,6 @@ namespace WebApplication12.ViewModal
     {
         [Required]
         public string RoleName { get; set; }
+     
     }
 }
