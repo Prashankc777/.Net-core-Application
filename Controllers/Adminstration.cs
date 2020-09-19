@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -39,9 +40,9 @@ namespace WebApplication12.Controllers
 
                 IdentityResult result = await  Rolemanager.CreateAsync(identityRole);
                if (result.Succeeded)
-                {
+               {
                     return RedirectToAction("LIstRole", "Adminstration");
-                }
+               }
 
                 foreach (IdentityError error in result.Errors)
                 {
@@ -117,12 +118,119 @@ namespace WebApplication12.Controllers
                     ModelState.AddModelError(string.Empty, erroe.Description);
                 }
                 return View(model);
-            }        
-
-           
+            }  
+                    
 
            
 
         }
+
+
+        public async Task<IActionResult> EditUserInRole(string roleId)
+        {
+            ViewBag.roleid = roleId;
+
+            var role = await Rolemanager.FindByIdAsync(roleId);
+            if (role == null)
+            {
+
+                ViewBag.ErrorMessage = $"role with id {roleId} cannot be found";
+                return View("Not Found");
+            }
+
+            else
+            {
+                var model = new List<UserRoleViewModel>();
+                foreach (var item in userManager.Users)
+                {
+                    var userRoleViewModel = new UserRoleViewModel
+                    {
+                        UserId = item.Id,
+                        UserName = item.UserName,
+
+                    };
+
+
+                    if (await userManager.IsInRoleAsync(item , role.Name))
+                    {
+                        userRoleViewModel.IsSelected = true;
+                    }
+
+                    else
+                    {
+                        userRoleViewModel.IsSelected = false;
+                    }
+                     
+                    model.Add(userRoleViewModel);
+                }
+
+
+                 return View(model);
+            }
+
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> EditUserInRole(List<UserRoleViewModel> model , string roleId)
+        {
+            var role = await Rolemanager.FindByIdAsync(roleId);
+            if (role == null)
+            {
+
+                ViewBag.ErrorMessage = $"role with id {roleId} cannot be found";
+                return View("Not Found");
+            }
+
+            for (int i = 0; i < model.Count; i++)
+            {
+                 var Users = await userManager.FindByIdAsync(model[i].UserId);
+
+                IdentityResult result = null;
+
+                //yedi user select chaina vne 
+
+                if (model[i].IsSelected &&   !(await userManager.IsInRoleAsync(Users, role.Name)))
+                {
+                    result = await userManager.AddToRoleAsync(Users, role.Name);
+
+                }
+
+                //user lai vako role hatauna lai
+
+                else if (!model[i].IsSelected && (await userManager.IsInRoleAsync(Users, role.Name)))
+                {
+                    result = await userManager.RemoveFromRoleAsync(Users, role.Name);
+                }
+
+                else
+                {
+                    continue;
+                }
+
+                if (result.Succeeded)
+                {
+                    if (i < model.Count -1)
+                    {
+                        continue;
+                    }
+
+                    else
+                    {
+                        return RedirectToAction("EditRole", new { Id = roleId });
+                    }
+                }
+
+
+            }
+
+            return RedirectToAction("EditRole", new { Id = roleId });
+
+        }
+
+
+
+
+
     }
 }
