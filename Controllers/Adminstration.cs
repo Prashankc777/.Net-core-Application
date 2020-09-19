@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication12.Models;
@@ -10,6 +11,7 @@ using WebApplication12.ViewModal;
 
 namespace WebApplication12.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class Adminstration : Controller
     {
         public readonly RoleManager<IdentityRole> Rolemanager;
@@ -169,7 +171,6 @@ namespace WebApplication12.Controllers
             }
 
         }
-
 
         [HttpPost]
         public async Task<IActionResult> EditUserInRole(List<UserRoleViewModel> model , string roleId)
