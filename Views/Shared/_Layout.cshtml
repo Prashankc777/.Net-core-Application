@@ -1,5 +1,5 @@
-﻿@using Microsoft.AspNetCore.Identity ; 
-@inject SignInManager<ApplicationUser> SignInManager ; 
+﻿@using Microsoft.AspNetCore.Identity ;
+@inject SignInManager<ApplicationUser> SignInManager ;
 
 <!DOCTYPE html>
 
@@ -46,15 +46,23 @@
                         <a asp-action="Create" asp-controller="Home" class="nav-link">Create</a>
                     </li>
 
-                </ul>
-                @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                {
-                    <li class="nav-item">
-                        <a asp-action="LIstRole" asp-controller="Adminstration" class="nav-link">Roles</a>
+
+
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Manage
+                        </a> 
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" asp-controller="Adminstration"
+                               asp-action="ListUsers">Users</a>
+                            <a class="dropdown-item" asp-controller="Adminstration"
+                               asp-action="LIstRole">Roles</a>
+                        </div>
                     </li>
-
-                }
-
+                </ul>
+               
 
                 <ul class="navbar-nav ml-auto">
                     @if (SignInManager.IsSignedIn(User))

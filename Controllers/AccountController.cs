@@ -44,6 +44,11 @@ namespace WebApplication12.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        return RedirectToAction("ListUsers", "Adminstration");
+                    }
+
                     await SignInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 } 

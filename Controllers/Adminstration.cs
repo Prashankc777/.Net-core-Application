@@ -11,19 +11,63 @@ using WebApplication12.ViewModal;
 
 namespace WebApplication12.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    
     public class Adminstration : Controller
     {
+
+        #region ---------- GLobal variable ----------
+
+       
         public readonly RoleManager<IdentityRole> Rolemanager;
         private readonly UserManager<ApplicationUser> userManager;
 
+        #endregion
+
+
+        #region --------- CONSTRUCTOR ---------      
+
         public Adminstration(RoleManager<IdentityRole> _Rolemanager, UserManager<ApplicationUser> _userManager)
         {
-            Rolemanager = _Rolemanager;
+            this.Rolemanager = _Rolemanager;
             this.userManager = _userManager;
         }
+        #endregion 
 
-        
+         
+        [HttpGet]
+        public IActionResult ListUsers()
+        {
+            var users = userManager.Users;
+            return View(users);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditUser(string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with {id} cannot be found";
+                return View("NotFound");
+            }
+
+            var userClaims = await userManager.GetClaimsAsync(user);
+            var userRoles = await userManager.GetRolesAsync(user);
+
+            var model = new EditUserViewModel
+            {
+                Id = user.Id,
+                Email = user.Email,
+                City = user.City,
+                UserName = user.UserName
+
+            };
+                
+        }
+
+
+
         [HttpGet]
         public IActionResult CreateRole()
         {
@@ -228,6 +272,11 @@ namespace WebApplication12.Controllers
             return RedirectToAction("EditRole", new { Id = roleId });
 
         }
+
+
+
+
+
 
 
 
