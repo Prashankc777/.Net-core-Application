@@ -71,6 +71,34 @@ namespace WebApplication12.Controllers
                 
         }
 
+
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with id {id} cannot be found";
+                return View("NotFound");
+            }
+
+            else
+            {
+                var Result = await userManager.DeleteAsync(user);
+                if (Result.Succeeded)
+                {
+                    return RedirectToAction("ListUsers");
+                }
+
+                foreach (var error in Result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+                return View("ListUsers");
+            }
+
+        }
+
         [HttpPost]
         public async Task<IActionResult> EditUser(EditUserViewModel modal)
         {
