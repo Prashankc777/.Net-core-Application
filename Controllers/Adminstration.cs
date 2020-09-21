@@ -60,11 +60,56 @@ namespace WebApplication12.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 City = user.City,
-                UserName = user.UserName
-
+                UserName = user.UserName,
+                Roles = userRoles,
+                Claims = userClaims.Select(q => q.Value).ToList()
             };
+
+            return View(model);
+
+        
                 
         }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUser(EditUserViewModel modal)
+        {
+            var user = await userManager.FindByIdAsync(modal.Id);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with {modal.UserName} cannot be found";
+                return View("NotFound");
+            }
+            else
+            {
+
+                user.UserName = modal.UserName;
+                user.City = modal.City;
+                user.Email = modal.Email;
+
+
+                var reuslt = await userManager.UpdateAsync(user);
+
+                if (reuslt.Succeeded)
+                {
+                    return RedirectToAction("ListUsers");
+
+                }
+
+
+                foreach (var error in reuslt.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                
+                    
+            }
+            return View(modal);
+
+
+
+       }
 
 
 
