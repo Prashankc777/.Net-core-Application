@@ -4,6 +4,15 @@
     ViewBag.Title = "All Users";
 }
 
+<link href="~/lib/twitter-bootstrap/css/bootstrap.css" rel="stylesheet" />
+<script src="~/lib/jquery/jquery.js"></script>
+<script src="~/lib/jquery-validate/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js">
+
+</script><script src="~/js/CustomScript.js"></script>
+
+
+<script src="~/lib/twitter-bootstrap/js/bootstrap.js"></script>
 
 <h1>All Users</h1>
 
@@ -32,8 +41,9 @@
                         <button type="submit" class="btn btn-danger">Yes</button>
                         <a href="#" class="btn btn-primary"
                            onclick="confirmDelete('@user.Id', false)">No</a>
+                        
                     </span>
-
+                    
                     <span id="deleteSpan_@user.Id">
                         <a href="#" class="btn btn-danger"
                            onclick="confirmDelete('@user.Id', true)">Delete</a>
