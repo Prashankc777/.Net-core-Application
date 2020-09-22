@@ -1,24 +1,21 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using WebApplication12.Models;
 using WebApplication12.ViewModal;
 
 namespace WebApplication12.Controllers
 {
-    
+
     public class Adminstration : Controller
     {
 
         #region ---------- GLobal variable ----------
 
        
-        public readonly RoleManager<IdentityRole> Rolemanager;
+        private readonly RoleManager<IdentityRole> Rolemanager;
         private readonly UserManager<ApplicationUser> userManager;
 
         #endregion
@@ -95,6 +92,44 @@ namespace WebApplication12.Controllers
                 }
 
                 return View("ListUsers");
+            }
+
+        }
+
+        public async Task<IActionResult> DeleteRole(string id)
+        {
+            var user = await Rolemanager.FindByIdAsync(id);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with id {id} cannot be found";
+                return View("NotFound");
+            }
+
+            else
+            {
+                try
+                {
+                    var Result = await Rolemanager.DeleteAsync(user);
+                    if (Result.Succeeded)
+                    {
+                        return RedirectToAction("LIstRole");
+                    }
+
+                    foreach (var error in Result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+                catch (System.Exception)
+                {
+                    ViewBag.ErrorTitle = $"{user.Name} role is in use";
+                    ViewBag.ErrorMessage = $"{user.Name} role cannot be deleted ";
+
+                    return View("Error");
+
+                }
+
+                return View("LIstRole");
             }
 
         }
@@ -297,7 +332,7 @@ namespace WebApplication12.Controllers
             {
 
                 ViewBag.ErrorMessage = $"role with id {roleId} cannot be found";
-                return View("Not Found");
+                return View("NotFound");
             }
 
             for (int i = 0; i < model.Count; i++)

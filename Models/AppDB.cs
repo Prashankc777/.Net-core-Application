@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
 namespace WebApplication12.Models
 {
@@ -24,6 +26,11 @@ namespace WebApplication12.Models
         {
             base.OnModelCreating(modelBuilder); //For Identity
             modelBuilder.Seed();
+
+            foreach (var foreign in modelBuilder.Model.GetEntityTypes().SelectMany(e=>e.GetForeignKeys()))
+            {
+                foreign.DeleteBehavior = DeleteBehavior.Restrict;
+            }
         }
 
     }
