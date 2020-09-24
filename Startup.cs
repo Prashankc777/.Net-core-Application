@@ -23,7 +23,7 @@ namespace WebApplication12
 
         public Startup(IConfiguration config)
         {
-            _config = config;
+            this._config = config;
         }
 
         public void ConfigureServices(IServiceCollection services)

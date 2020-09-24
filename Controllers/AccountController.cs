@@ -15,10 +15,10 @@ namespace WebApplication12.Controllers
         public readonly SignInManager<ApplicationUser> SignInManager;
         public readonly UserManager<ApplicationUser> UserManager;
 
-        public AccountController(UserManager<ApplicationUser> _UserManager, SignInManager<ApplicationUser> _SignInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
-            this.UserManager = _UserManager;
-            this.SignInManager = _SignInManager;
+            this.UserManager = userManager;
+            this.SignInManager = signInManager;
         }
 
 
@@ -33,29 +33,27 @@ namespace WebApplication12.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModal model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View();
+            var user = new ApplicationUser 
             {
-                var user = new ApplicationUser 
+                UserName = model.Email, 
+                Email = model.Email,
+                City = model.City
+            };
+            var result = await UserManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                 {
-                    UserName = model.Email, 
-                    Email = model.Email,
-                    City = model.City
-                };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                    {
-                        return RedirectToAction("ListUsers", "Adminstration");
-                    }
-
-                    await SignInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
-                } 
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description); 
+                    return RedirectToAction("ListUsers", "Adminstration");
                 }
+
+                await SignInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Home");
+            } 
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description); 
             }
             return View();
         }
@@ -82,21 +80,19 @@ namespace WebApplication12.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModule model, string returnUrl)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View();
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+            if (result.Succeeded)
             {
-
-                var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
-                if (result.Succeeded)
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
-                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                    {
-                        return Redirect(returnUrl);
+                    return Redirect(returnUrl);
 
-                    }
-
-                    return RedirectToAction("index", "home");
                 }
-                ModelState.AddModelError(string.Empty, "Invalid Login Attempt"); }
+
+                return RedirectToAction("index", "home");
+            }
+            ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
             return View();
         }
 
@@ -105,15 +101,7 @@ namespace WebApplication12.Controllers
         public async Task<IActionResult> IsEmailInUse(string email)
         {
             var user = await UserManager.FindByEmailAsync(email);
-            if (user == null )
-            {
-                return Json(true);
-            }
-            else
-            {
-                return Json($" {email} is already exist");
-            }
-
+            return user is null ? Json(true) : Json($" {email} is already exist");
         }
 
         [HttpGet]

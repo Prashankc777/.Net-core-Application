@@ -284,7 +284,7 @@ namespace WebApplication12.Controllers
 
         }
 
-
+        [HttpPost]
         public async Task<IActionResult> EditUserInRole(string roleId)
         {
             ViewBag.roleid = roleId;
@@ -378,15 +378,13 @@ namespace WebApplication12.Controllers
                         return RedirectToAction("EditRole", new { Id = roleId });
                     }
                 }
-
-
             }
 
             return RedirectToAction("EditRole", new { Id = roleId });
 
         }
 
-        [HttpGet]
+       
 
         [HttpGet]
         public async Task<IActionResult> ManageUserClaims(string userId)
@@ -434,7 +432,7 @@ namespace WebApplication12.Controllers
         {
             var user = await _userManager.FindByIdAsync(model.UserId);
 
-            if (user == null)
+            if (user is null)
             {
                 ViewBag.ErrorMessage = $"User with Id = {model.UserId} cannot be found";
                 return View("NotFound");
@@ -446,7 +444,7 @@ namespace WebApplication12.Controllers
 
             if (!result.Succeeded)
             {
-                ModelState.AddModelError("", "Cannot remove user existing claims");
+                ModelState.AddModelError("", "CANNOT REMOVE USER EXISTING CLAIMS");
                 return View(model);
             }
 
@@ -456,7 +454,7 @@ namespace WebApplication12.Controllers
 
             if (!result.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, "Cannot add selected claims to user");
+                ModelState.AddModelError(string.Empty, "CANNOT ADD SELECTED CLAIMS TO USER");
                 return View(model);
             }
 

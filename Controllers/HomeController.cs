@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,39 +15,36 @@ namespace WebApplication12.Controllers
 {
     public class HomeController : Controller
     {
-        public readonly IEmployeeRepository _employeeRepository;
-        private readonly IHostingEnvironment hostingEnvironment;
+        public readonly IEmployeeRepository EmployeeRepository;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public HomeController(IEmployeeRepository _employee, IHostingEnvironment hostingEnvironment)
+        public HomeController(IEmployeeRepository employee, IHostingEnvironment hostingEnvironment)
         {
-            this._employeeRepository = _employee;
-            this.hostingEnvironment = hostingEnvironment;
+            this.EmployeeRepository = employee;
+            this._hostingEnvironment = hostingEnvironment;
         }
         public ViewResult Index()
         {
-            var model = _employeeRepository.GetAllEmployee();
+            var model = EmployeeRepository.GetAllEmployee();
             return View(model);
 
         }
         [Route("details/{id?}")]
         public ViewResult details(int? id)
         {
-            
-            Employee employee = _employeeRepository.GetEmployee(id.Value);
+            Debug.Assert(id != null, nameof(id) + " != null");
+            var employee = EmployeeRepository.GetEmployee(id.Value);
             if (employee == null)
             {
                 Response.StatusCode = 404;
                 return View("EmployeeNotFound", id.Value);
             }
-
-
-            HomeDetails home = new HomeDetails()
+            var home = new HomeDetails()
             {
                 Employee = employee,
                 PageTitle = "Employee Details"
 
             };
-
             return View(home);
         }
 
@@ -62,10 +60,9 @@ namespace WebApplication12.Controllers
         {
             if (ModelState.IsValid)
             {
-                string uniqueFilename = ProcessUploadedFile(employee);
+                var uniqueFilename = ProcessUploadedFile(employee);
 
-
-                Employee newEmployee = new Employee
+                var newEmployee = new Employee
                 {
                     Name = employee.Name,
                     Email = employee.Email,
@@ -73,7 +70,7 @@ namespace WebApplication12.Controllers
                     PhotoPath = uniqueFilename
                 };
 
-                _employeeRepository.add(newEmployee);
+                EmployeeRepository.add(newEmployee);
 
                 return RedirectToAction("details", new { id = newEmployee.Id });
 
@@ -87,8 +84,8 @@ namespace WebApplication12.Controllers
         [Authorize]
         public ViewResult Edit(int id)
         {
-            Employee employee = _employeeRepository.GetEmployee(id);
-            EmployeeEditViewModel empviewmodel = new EmployeeEditViewModel
+            var employee = EmployeeRepository.GetEmployee(id);
+            var empviewmodel = new EmployeeEditViewModel
             {
                 id = employee.Id,
                 Name = employee.Name,
@@ -106,30 +103,29 @@ namespace WebApplication12.Controllers
 
         public IActionResult Edit(EmployeeEditViewModel model)
         {
-           
-            if (ModelState.IsValid)
-            {
-                
-                Employee employee = _employeeRepository.GetEmployee(model.id);
-               
+
+            if (ModelState.IsValid) {
+
+                var employee = EmployeeRepository.GetEmployee(model.id);
+
                 employee.Name = model.Name;
                 employee.Email = model.Email;
-                employee.Department = model.Department;                
+                employee.Department = model.Department;
                 if (model.Photo != null)
                 {
-                    
+
                     if (model.ExistingPhotoPath != null)
                     {
-                        string filePath = Path.Combine(hostingEnvironment.WebRootPath,
+                        var filePath = Path.Combine(_hostingEnvironment.WebRootPath,
                             "images", model.ExistingPhotoPath);
                         System.IO.File.Delete(filePath);
                     }
-                    
+
                     employee.PhotoPath = ProcessUploadedFile(model);
                 }
 
-            
-                Employee updatedEmployee = _employeeRepository.Update(employee);
+
+                var updatedEmployee = EmployeeRepository.Update(employee);
 
                 return RedirectToAction("index");
             }
@@ -139,22 +135,17 @@ namespace WebApplication12.Controllers
 
         }
 
-    private string ProcessUploadedFile(EmployeeCreateViewModel model)
-    {
+        private string ProcessUploadedFile(EmployeeCreateViewModel model)
+        {
             string uniqueFileName = null;
 
-            if (model.Photo != null)
-            {
-                string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Photo.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    model.Photo.CopyTo(fileStream);
-                }
-            }
-
+            if (model.Photo is null) return null;
+            var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "images");
+            uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Photo.FileName;
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            using var fileStream = new FileStream(filePath, FileMode.Create);
+            model.Photo.CopyTo(fileStream);
             return uniqueFileName;
         }
-}
+    }
 }
