@@ -9,7 +9,7 @@ namespace WebApplication12.Controllers
     public class DepartmentController : Controller
     {
 
-        public string list()
+        public string List()
         {
             return "list of department";
         }

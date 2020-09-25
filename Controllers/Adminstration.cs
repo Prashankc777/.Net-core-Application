@@ -24,10 +24,10 @@ namespace WebApplication12.Controllers
 
         #region --------- CONSTRUCTOR ---------      
 
-        public Adminstration(RoleManager<IdentityRole> rolemanager, UserManager<ApplicationUser> _userManager)
+        public Adminstration(RoleManager<IdentityRole> rolemanager, UserManager<ApplicationUser> userManager)
         {
             this._rolemanager = rolemanager;
-            this._userManager = _userManager;
+            this._userManager = userManager;
         }
         #endregion
 
@@ -46,8 +46,7 @@ namespace WebApplication12.Controllers
         public async Task<IActionResult> EditUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-
-            if (user == null)
+            if (user is null)
             {
                 ViewBag.ErrorMessage = $"User with {id} cannot be found";
                 return View("NotFound");
@@ -71,12 +70,10 @@ namespace WebApplication12.Controllers
         
                 
         }
-
-
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
+            if (user is null)
             {
                 ViewBag.ErrorMessage = $"User with id {id} cannot be found";
                 return View("NotFound");
@@ -84,13 +81,13 @@ namespace WebApplication12.Controllers
 
             else
             {
-                var Result = await _userManager.DeleteAsync(user);
-                if (Result.Succeeded)
+                var result = await _userManager.DeleteAsync(user);
+                if (result.Succeeded)
                 {
                     return RedirectToAction("ListUsers");
                 }
 
-                foreach (var error in Result.Errors)
+                foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
@@ -104,7 +101,7 @@ namespace WebApplication12.Controllers
         public async Task<IActionResult> DeleteRole(string id)
         {
             var user = await _rolemanager.FindByIdAsync(id);
-            if (user == null)
+            if (user is null)
             {
                 ViewBag.ErrorMessage = $"User with id {id} cannot be found";
                 return View("NotFound");
@@ -114,13 +111,13 @@ namespace WebApplication12.Controllers
             {
                 try
                 {
-                    var Result = await _rolemanager.DeleteAsync(user);
-                    if (Result.Succeeded)
+                    var result = await _rolemanager.DeleteAsync(user);
+                    if (result.Succeeded)
                     {
                         return RedirectToAction("LIstRole");
                     }
 
-                    foreach (var error in Result.Errors)
+                    foreach (var error in result.Errors)
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
@@ -144,7 +141,7 @@ namespace WebApplication12.Controllers
         {
             var user = await _userManager.FindByIdAsync(modal.Id);
 
-            if (user == null)
+            if (user is null)
             {
                 ViewBag.ErrorMessage = $"User with {modal.UserName} cannot be found";
                 return View("NotFound");
@@ -157,16 +154,16 @@ namespace WebApplication12.Controllers
                 user.Email = modal.Email;
 
 
-                var reuslt = await _userManager.UpdateAsync(user);
+                var result = await _userManager.UpdateAsync(user);
 
-                if (reuslt.Succeeded)
+                if (result.Succeeded)
                 {
                     return RedirectToAction("ListUsers");
 
                 }
 
 
-                foreach (var error in reuslt.Errors)
+                foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
@@ -178,9 +175,6 @@ namespace WebApplication12.Controllers
 
 
        }
-
-
-
         [HttpGet]
         public IActionResult CreateRole()
         {
@@ -190,26 +184,22 @@ namespace WebApplication12.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+            var identityRole = new IdentityRole
             {
-                IdentityRole identityRole = new IdentityRole
-                {
-                    Name = model.RoleName
-                };
+                Name = model.RoleName
+            };
 
-                IdentityResult result = await  _rolemanager.CreateAsync(identityRole);
-               if (result.Succeeded)
-               {
-                    return RedirectToAction("LIstRole", "Adminstration");
-               }
+            var result = await  _rolemanager.CreateAsync(identityRole);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("LIstRole", "Adminstration");
+            }
+            foreach (var error in result.Errors)
+            {
 
-                foreach (IdentityError error in result.Errors)
-                {
-
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-
-            }           
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
             return View(model);
         }
 
@@ -222,9 +212,9 @@ namespace WebApplication12.Controllers
 
         }
         [HttpGet]
-        public async Task<IActionResult> EditRole(string id, string name)
+        public async Task<IActionResult> EditRole(string userid, string name)
         {
-            var role = await _rolemanager.FindByIdAsync(id);
+            var role = await _rolemanager.FindByIdAsync(userid);
 
             if (role is null)
             {
@@ -242,9 +232,9 @@ namespace WebApplication12.Controllers
             {
 
                  if(await _userManager.IsInRoleAsync(user, role.Name))
-                {
-                    model.User.Add(user.UserName);
-                }
+                 {
+                     model.User.Add(user.UserName);
+                 }
             }
 
             return View(model);
@@ -285,7 +275,7 @@ namespace WebApplication12.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditUserInRole(string roleId)
+        public async Task<IActionResult> EditUserInRole( string username , string roleId)
         {
             ViewBag.roleid = roleId;
 

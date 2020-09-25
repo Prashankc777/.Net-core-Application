@@ -49,7 +49,6 @@ namespace WebApplication12.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public ViewResult Create()
         {
             return View();
@@ -58,34 +57,30 @@ namespace WebApplication12.Controllers
         [HttpPost]
         public IActionResult Create(EmployeeCreateViewModel employee)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View();
+            var uniqueFilename = ProcessUploadedFile(employee);
+
+            var newEmployee = new Employee
             {
-                var uniqueFilename = ProcessUploadedFile(employee);
+                Name = employee.Name,
+                Email = employee.Email,
+                Department = employee.Department,
+                PhotoPath = uniqueFilename
+            };
 
-                var newEmployee = new Employee
-                {
-                    Name = employee.Name,
-                    Email = employee.Email,
-                    Department = employee.Department,
-                    PhotoPath = uniqueFilename
-                };
+            EmployeeRepository.add(newEmployee);
 
-                EmployeeRepository.add(newEmployee);
-
-                return RedirectToAction("details", new { id = newEmployee.Id });
-
-            }
-            return View();
+            return RedirectToAction("details", new { id = newEmployee.Id });
 
 
         }
 
         [HttpGet]
-        [Authorize]
+      
         public ViewResult Edit(int id)
         {
             var employee = EmployeeRepository.GetEmployee(id);
-            var empviewmodel = new EmployeeEditViewModel
+            var viewmodel = new EmployeeEditViewModel
             {
                 id = employee.Id,
                 Name = employee.Name,
@@ -94,43 +89,35 @@ namespace WebApplication12.Controllers
                 ExistingPhotoPath = employee.PhotoPath
 
             };
-            return View(empviewmodel);
+            return View(viewmodel);
 
         }
 
         [HttpPost]
-        [Authorize]
-
         public IActionResult Edit(EmployeeEditViewModel model)
         {
+            if (!ModelState.IsValid) return View(model);
+            var employee = EmployeeRepository.GetEmployee(model.id);
 
-            if (ModelState.IsValid) {
+            employee.Name = model.Name;
+            employee.Email = model.Email;
+            employee.Department = model.Department;
+            if (model.Photo != null)
+            {
 
-                var employee = EmployeeRepository.GetEmployee(model.id);
-
-                employee.Name = model.Name;
-                employee.Email = model.Email;
-                employee.Department = model.Department;
-                if (model.Photo != null)
+                if (model.ExistingPhotoPath != null)
                 {
-
-                    if (model.ExistingPhotoPath != null)
-                    {
-                        var filePath = Path.Combine(_hostingEnvironment.WebRootPath,
-                            "images", model.ExistingPhotoPath);
-                        System.IO.File.Delete(filePath);
-                    }
-
-                    employee.PhotoPath = ProcessUploadedFile(model);
+                    var filePath = Path.Combine(_hostingEnvironment.WebRootPath,
+                        "images", model.ExistingPhotoPath);
+                    System.IO.File.Delete(filePath);
                 }
 
-
-                var updatedEmployee = EmployeeRepository.Update(employee);
-
-                return RedirectToAction("index");
+                employee.PhotoPath = ProcessUploadedFile(model);
             }
 
-            return View(model);
+
+            var updatedEmployee = EmployeeRepository.Update(employee);
+            return RedirectToAction("index");
 
 
         }
