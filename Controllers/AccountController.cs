@@ -23,14 +23,14 @@ namespace WebApplication12.Controllers
 
 
         [HttpGet]
-        [AllowAnonymous]
+     
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
-        [AllowAnonymous]
+       
         public async Task<IActionResult> Register(RegisterViewModal model)
         {
             if (!ModelState.IsValid) return View();
@@ -77,7 +77,7 @@ namespace WebApplication12.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        
         public async Task<IActionResult> Login(LoginViewModule model, string returnUrl)
         {
             if (!ModelState.IsValid) return View();
@@ -97,7 +97,7 @@ namespace WebApplication12.Controllers
         }
 
         [AcceptVerbs("GET", "POST")]
-        [AllowAnonymous]
+     
         public async Task<IActionResult> IsEmailInUse(string email)
         {
             var user = await UserManager.FindByEmailAsync(email);
@@ -105,7 +105,7 @@ namespace WebApplication12.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+        
         public IActionResult AccessDenied()
         {
             return View();

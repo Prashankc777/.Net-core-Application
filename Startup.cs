@@ -40,6 +40,13 @@ namespace WebApplication12
                //Option.Filters.Add(new AuthorizeFilter(policy));
 
            }).AddXmlDataContractSerializerFormatters();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("DeleteRolePolicy", policy => policy.RequireClaim("Delete Role")) ;
+            });
+
+
             services.AddScoped<IEmployeeRepository, SqlEmployeeRepository>();
         }
 

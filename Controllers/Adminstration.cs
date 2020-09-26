@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using WebApplication12.Models;
 using WebApplication12.ViewModal;
 
@@ -98,7 +99,8 @@ namespace WebApplication12.Controllers
 
         }
         #endregion
-
+        [HttpPost]
+        [Authorize(Policy = "DeleteRolePolicy")]
         public async Task<IActionResult> DeleteRole(string id)
         {
             var user = await _rolemanager.FindByIdAsync(id);
@@ -326,7 +328,6 @@ namespace WebApplication12.Controllers
             var role = await _rolemanager.FindByIdAsync(roleId);
             if (role is null)
             {
-
                 ViewBag.ErrorMessage = $"role with id {roleId} cannot be found";
                 return View("NotFound");
             }
@@ -441,13 +442,9 @@ namespace WebApplication12.Controllers
             result = await _userManager.AddClaimsAsync(user,
                 model.Cliams.Where(c => c.IsSelected).Select(c => new Claim(c.ClaimType, c.ClaimType)));
 
-            if (!result.Succeeded)
-            {
-                ModelState.AddModelError(string.Empty, "CANNOT ADD SELECTED CLAIMS TO USER");
-                return View(model);
-            }
-
-            return RedirectToAction("EditUser", new { Id = model.UserId });
+            if (result.Succeeded) return RedirectToAction("EditUser", new {Id = model.UserId});
+            ModelState.AddModelError(string.Empty, "CANNOT ADD SELECTED CLAIMS TO USER");
+            return View(model);
 
         }
 

@@ -13,6 +13,6 @@ namespace WebApplication12.ViewModal
         }
 
         public string UserId { get; set; }
-        public List<UserClaim> Cliams { get; set; }
+        public List<UserClaim> Cliams { get; set; } // yo chhai to acoid null exception
     }
 }
