@@ -12,4 +12,7 @@ namespace WebApplication12.Models
             new Claim("Delete Role","Delete Role")
         };
     }
+
+
+
 }

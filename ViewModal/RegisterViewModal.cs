@@ -13,7 +13,7 @@ namespace WebApplication12.ViewModal
         [Required]
         [EmailAddress]   
         [Remote (action: "IsEmailInUse", controller: "Account")]
-        [ValidEmailDomain ( _allowedDomain : "kc.com", ErrorMessage ="Email domain must be kc.com")]
+        [ValidEmailDomain ( allowedDomain : "kc.com", ErrorMessage ="Email domain must be kc.com")]
         public string Email { get; set; }
         [Required]
         [DataType(DataType.Password)]

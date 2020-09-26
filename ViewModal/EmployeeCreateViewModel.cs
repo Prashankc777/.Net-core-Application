@@ -11,7 +11,7 @@ namespace WebApplication12.ViewModal
     public class EmployeeCreateViewModel
     {
         
-        [Required, MaxLength(50, ErrorMessage = "Name cannot Exceed 5 charater")]
+        [Required, MaxLength(50, ErrorMessage = "Name cannot Exceed 5 character")]
         public string Name { get; set; }
         [Required]
         [RegularExpression(@"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", ErrorMessage = "Invalid email format")]

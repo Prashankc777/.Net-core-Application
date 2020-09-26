@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -212,13 +213,13 @@ namespace WebApplication12.Controllers
 
         }
         [HttpGet]
-        public async Task<IActionResult> EditRole(string userid, string name)
+        public async Task<IActionResult> EditRole(string id)
         {
-            var role = await _rolemanager.FindByIdAsync(userid);
+            var role = await _rolemanager.FindByIdAsync(id);
 
             if (role is null)
             {
-                ViewBag.ErrorMessage = $"Role {name } is not found";
+                ViewBag.ErrorMessage = $"Role {id} is not found";
                 return View("NotFound");
             }
 
@@ -262,9 +263,9 @@ namespace WebApplication12.Controllers
                 }
 
 
-                foreach (var erroe in result.Errors)
+                foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, erroe.Description);
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
                 return View(model);
             }  
@@ -274,16 +275,16 @@ namespace WebApplication12.Controllers
 
         }
 
-        [HttpPost]
-        public async Task<IActionResult> EditUserInRole( string username , string roleId)
+        [HttpGet]
+        public async Task<IActionResult> EditUserInRole(string userid)
         {
-            ViewBag.roleid = roleId;
+            ViewBag.roleid = userid;
 
-            var role = await _rolemanager.FindByIdAsync(roleId);
-            if (role == null)
+            var role = await _rolemanager.FindByIdAsync(userid);
+            if (role is null)
             {
 
-                ViewBag.ErrorMessage = $"role with id {roleId} cannot be found";
+                ViewBag.ErrorMessage = $"role with id {userid} cannot be found";
                 return View("NotFound");
             }
 
@@ -330,25 +331,25 @@ namespace WebApplication12.Controllers
                 return View("NotFound");
             }
 
-            for (int i = 0; i < model.Count; i++)
+            for (var i = 0; i < model.Count; i++)
             {
-                 var Users = await _userManager.FindByIdAsync(model[i].UserId);
+                 var users = await _userManager.FindByIdAsync(model[i].UserId);
 
                 IdentityResult result = null;
 
                 //yedi user select chaina vne 
 
-                if (model[i].IsSelected &&   !(await _userManager.IsInRoleAsync(Users, role.Name)))
+                if (model[i].IsSelected &&   !(await _userManager.IsInRoleAsync(users, role.Name)))
                 {
-                    result = await _userManager.AddToRoleAsync(Users, role.Name);
+                    result = await _userManager.AddToRoleAsync(users, role.Name);
 
                 }
 
                 //user lai vako role hatauna lai
 
-                else if (!model[i].IsSelected && (await _userManager.IsInRoleAsync(Users, role.Name)))
+                else if (!model[i].IsSelected && (await _userManager.IsInRoleAsync(users, role.Name)))
                 {
-                    result = await _userManager.RemoveFromRoleAsync(Users, role.Name);
+                    result = await _userManager.RemoveFromRoleAsync(users, role.Name);
                 }
 
                 else
@@ -356,17 +357,15 @@ namespace WebApplication12.Controllers
                     continue;
                 }
 
-                if (result.Succeeded)
+                if (!result.Succeeded) continue;
+                if (i < model.Count -1)
                 {
-                    if (i < model.Count -1)
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    else
-                    {
-                        return RedirectToAction("EditRole", new { Id = roleId });
-                    }
+                else
+                {
+                    return RedirectToAction("EditRole", new { Id = roleId });
                 }
             }
 
@@ -396,9 +395,9 @@ namespace WebApplication12.Controllers
             };
 
             // Loop through each claim we have in our application
-            foreach (Claim claim in ClaimsStore.AllClaims)
+            foreach (var claim in ClaimsStore.AllClaims)
             {
-                UserClaim userClaim = new UserClaim
+                var userClaim = new UserClaim
                 {
                     ClaimType = claim.Type
                 };
@@ -434,7 +433,7 @@ namespace WebApplication12.Controllers
 
             if (!result.Succeeded)
             {
-                ModelState.AddModelError("", "CANNOT REMOVE USER EXISTING CLAIMS");
+                ModelState.AddModelError(string.Empty, "CANNOT REMOVE USER EXISTING CLAIMS");
                 return View(model);
             }
 
