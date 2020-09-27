@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity ;
-@inject SignInManager<ApplicationUser> SignInManager ;
+@inject SignInManager<ApplicationUser> signInManager ;
 
 <!DOCTYPE html>
 
@@ -52,12 +52,15 @@
                     <li class="nav-item">
                         <a asp-action="Create" asp-controller="Home" class="nav-link">Create</a>
                     </li>
+                    <li class="nav-item">
+                        <a asp-action="Logout" asp-controller="Account" class="nav-link">Logout</a>
+                    </li>
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Manage
-                        </a> 
+                        </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <a class="dropdown-item" asp-controller="Adminstration"
                                asp-action="ListUsers">Users</a>
@@ -66,10 +69,10 @@
                         </div>
                     </li>
                 </ul>
-               
+
 
                 <ul class="navbar-nav ml-auto">
-                    @if (SignInManager.IsSignedIn(User))
+                    @if (signInManager.IsSignedIn(User))
                     {
                         <li class="nav-item">
                             <form method="post" asp-controller="Account" asp-action="Logout">

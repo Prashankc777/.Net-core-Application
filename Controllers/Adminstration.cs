@@ -139,6 +139,12 @@ namespace WebApplication12.Controllers
 
         }
 
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> EditUser(EditUserViewModel modal)
         {

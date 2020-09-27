@@ -13,6 +13,7 @@ using WebApplication12.ViewModal;
 
 namespace WebApplication12.Controllers
 {
+   
     public class HomeController : Controller
     {
         public readonly IEmployeeRepository EmployeeRepository;
@@ -23,6 +24,7 @@ namespace WebApplication12.Controllers
             this.EmployeeRepository = employee;
             this._hostingEnvironment = hostingEnvironment;
         }
+
         public ViewResult Index()
         {
             var model = EmployeeRepository.GetAllEmployee();
@@ -34,7 +36,7 @@ namespace WebApplication12.Controllers
         {
             Debug.Assert(id != null, nameof(id) + " != null");
             var employee = EmployeeRepository.GetEmployee(id.Value);
-            if (employee == null)
+            if (employee is null)
             {
                 Response.StatusCode = 404;
                 return View("EmployeeNotFound", id.Value);
@@ -49,12 +51,14 @@ namespace WebApplication12.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ViewResult Create()
         {
             return View();
 
         }
         [HttpPost]
+        [Authorize]
         public IActionResult Create(EmployeeCreateViewModel employee)
         {
             if (!ModelState.IsValid) return View();
@@ -76,6 +80,7 @@ namespace WebApplication12.Controllers
         }
 
         [HttpGet]
+        [Authorize]
       
         public ViewResult Edit(int id)
         {
@@ -94,6 +99,7 @@ namespace WebApplication12.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Edit(EmployeeEditViewModel model)
         {
             if (!ModelState.IsValid) return View(model);

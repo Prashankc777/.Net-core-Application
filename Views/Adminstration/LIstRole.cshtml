@@ -24,17 +24,17 @@
                 <h5 class="card-title">@role.Name</h5>
             </div>
             <div class="card-footer">
-                @if ((await AuthorizationService.AuthorizeAsync(User, "EditRolePolicy")).Succeeded)
-                {
+                @*@if ((await AuthorizationService.AuthorizeAsync(User, "EditRolePolicy")).Succeeded)
+                {*@
                     
                     <a class="btn btn-primary" asp-action="EditRole" asp-controller="Adminstration" asp-route-id="@role.Id">Edit</a>
 
-                }
+                @*}
        
-               @if ((await AuthorizationService.AuthorizeAsync(User, )))
-               {
+               @if ((await AuthorizationService.AuthorizeAsync(User, "DeletePolicy")).Succeeded)*@
+               @*{*@
                    <a class="btn btn-danger" asp-action="DeleteRole" asp-controller="Adminstration" asp-route-id="@role.Id">Delete</a>
-               } 
+               @*}*@ 
 
             </div>
         </div>

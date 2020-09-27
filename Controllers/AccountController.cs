@@ -72,12 +72,11 @@ namespace WebApplication12.Controllers
 
         public IActionResult Login()
         {
-            ModelState.Clear();
             return View();
         }
 
         [HttpPost]
-        
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModule model, string returnUrl)
         {
             if (!ModelState.IsValid) return View();
@@ -87,13 +86,15 @@ namespace WebApplication12.Controllers
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
                     return Redirect(returnUrl);
-
+                    //return RedirectToAction("Index", "Home");
                 }
 
-                return RedirectToAction("index", "home");
+                return RedirectToAction("Index", "Home");
             }
+
             ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
             return View();
+
         }
 
         [AcceptVerbs("GET", "POST")]
@@ -104,12 +105,7 @@ namespace WebApplication12.Controllers
             return user is null ? Json(true) : Json($" {email} is already exist");
         }
 
-        [HttpGet]
-        
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
+       
 
 
 

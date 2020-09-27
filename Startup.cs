@@ -28,18 +28,22 @@ namespace WebApplication12
 
         public void ConfigureServices(IServiceCollection services)
         {
-            string connectionString = _config.GetConnectionString("DefaultConnection");
+            var connectionString = _config.GetConnectionString("DefaultConnection");
             services.AddDbContextPool<AppDB>(options =>
                options.UseSqlServer(connectionString));
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDB>();
 
-            services.AddMvc(Option =>
+            services.AddMvc(option =>
            {
                //var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-               //Option.Filters.Add(new AuthorizeFilter(policy));
+               //option.Filters.Add(new AuthorizeFilter(policy));
 
            }).AddXmlDataContractSerializerFormatters();
+
+
+            
+
 
             services.AddAuthorization(options =>
             {
