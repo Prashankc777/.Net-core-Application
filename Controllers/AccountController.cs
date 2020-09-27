@@ -23,6 +23,7 @@ namespace WebApplication12.Controllers
 
 
         [HttpGet]
+       
      
         public IActionResult Register()
         {
@@ -86,14 +87,14 @@ namespace WebApplication12.Controllers
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
                     return Redirect(returnUrl);
-                    //return RedirectToAction("Index", "Home");
+                    
                 }
 
                 return RedirectToAction("Index", "Home");
             }
 
             ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
-            return View();
+            return View(model);
 
         }
 

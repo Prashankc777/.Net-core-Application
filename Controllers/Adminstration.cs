@@ -100,7 +100,7 @@ namespace WebApplication12.Controllers
         }
         #endregion
         [HttpPost]
-        [Authorize(Policy = "DeleteRolePolicy")]
+     
         public async Task<IActionResult> DeleteRole(string id)
         {
             var user = await _rolemanager.FindByIdAsync(id);
@@ -221,7 +221,7 @@ namespace WebApplication12.Controllers
 
         }
         [HttpGet]
-        [Authorize(Policy = "EditRolePolicy")]
+
         public async Task<IActionResult> EditRole(string id)
         {
             var role = await _rolemanager.FindByIdAsync(id);
@@ -252,7 +252,7 @@ namespace WebApplication12.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "EditRolePolicy")]
+ 
         public async Task<IActionResult> EditRole(EditRoleViewModel model)
         {
             var role = await _rolemanager.FindByIdAsync(model.id);

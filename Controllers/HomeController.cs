@@ -51,14 +51,14 @@ namespace WebApplication12.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+
         public ViewResult Create()
         {
             return View();
 
         }
         [HttpPost]
-        [Authorize]
+
         public IActionResult Create(EmployeeCreateViewModel employee)
         {
             if (!ModelState.IsValid) return View();
@@ -80,7 +80,7 @@ namespace WebApplication12.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+
       
         public ViewResult Edit(int id)
         {
@@ -99,7 +99,7 @@ namespace WebApplication12.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+
         public IActionResult Edit(EmployeeEditViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
